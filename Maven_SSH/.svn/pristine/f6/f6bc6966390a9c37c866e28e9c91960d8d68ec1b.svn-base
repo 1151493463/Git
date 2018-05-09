@@ -1,0 +1,52 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <%@ taglib prefix="s" uri="/struts-tags" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/area.jsp"></script>
+</head>
+<body>
+	<form action="${pageContext.request.contextPath }/employee/employeeAction_update.action" 
+	method="post" enctype="multipart/form-data">
+	ID:<s:property value="employee.employeeId"/><br>
+	<input type="hidden" name="employeeId" value='<s:property value="employee.employeeId"/>'>
+	员工姓名：<input type="text" name="employeeName" value="<s:property value="employee.employeeName"/>"><br>
+	密码：<input type="text" name="employeePassword" value='<s:property value="employee.employeePassword"/>'><br>
+	员工照片：<input type="file" name="photo">
+	<span id="area">
+	家庭住址：<select id="pro">
+    	<option value="">请选择省</option>
+	</select>
+	<select id="city">
+   	 	<option value="">请选择市</option>
+	</select>
+	<select id="dis">
+    	<option value="">请选择区</option>
+	</select>
+	</span><br>
+	<input type="hidden" id="address" name="employeeAddress">
+	出生日期：<input type="date" name="employeeBrithday" value='<s:date name="employee.employeeBrithday" format="yyyy-MM-dd"/>'><br>
+	入职日期：<input type="date" name="joinDate" value='<s:date name="employee.joinDate" format="yyyy-MM-dd"/>'><br>
+	
+	<%-- <s:select name="department.departmentId" list="list" value="department.departmentId" listKey="departmentId" listValue="departmentName" headerValue="---请选择---"></s:select> --%>
+	<%-- 所属部门：<select name="department.departmentId">
+		<option value="1">研发部</option>
+		<option value="2">销售部</option>
+		<option value="3">人事部</option>
+		<option value="4">运输部</option>
+		<option value="5">财务部</option>
+	</select><br>		 --%>
+	<s:select label="部门" name='<s:property value="department.departmentName"/>' list="list" listKey="%{departmentId}" listValue="%{departmentName}" />
+		
+		<input onclick="getValue()" type="submit" value="提交">
+		
+	</form>
+<s:debug></s:debug>
+<button onclick="getValue()">ok</button>
+</body>
+</html>

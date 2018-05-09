@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-4-10 10:31:11 by Hibernate Tools 3.5.0.Final -->
+<hibernate-mapping>
+    <class name="cn.itcast.domain.Department" table="DEPARTMENT">
+        <id name="departmentId" type="java.lang.Integer">
+            <column name="DEPARTMENTID" />
+            <generator class="native" />
+        </id>
+        <property name="departmentName" type="java.lang.String">
+        </property>
+        <property name="departmentDesc" type="java.lang.String">
+        </property>
+        <set name="employees" table="EMPLOYEE" cascade="save-update,delete" inverse="true" lazy="true">
+            <key>
+                <column name="DepartmentEmployee" />
+            </key>
+            <one-to-many class="cn.itcast.domain.Employee" />
+        </set>
+    </class>
+</hibernate-mapping>

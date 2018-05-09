@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+   "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+   "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <constant name="struts.i18n.encoding" value="UTF-8" />
+    <constant name="struts.devMode" value="true" />
+    <constant name="struts.multipart.maxSize" value="1000000" />
+    <constant name="struts.multipart.saveDir" value="/tmp"/>
+	<!-- common -->
+	<package name="ssh_employee" namespace="/employee" extends="common">
+	
+		<action name="employeeAction_*" class="employeeAction" method="{1}">
+			<result name="toIndex" type="chain">
+				<param name="actionName">main</param>
+				<param name="namespace">/</param>
+			</result>
+			<result name="list">/WEB-INF/jsp/employee/list.jsp</result>
+			<result name="toList" type="redirectAction">
+				<param name="actionName">employeeAction_page</param>
+				<param name="namespace">/employee</param>
+			</result>
+			<result name="add">/WEB-INF/jsp/employee/add.jsp</result>
+			<result name="toUpdate">/WEB-INF/jsp/employee/update.jsp</result>
+			<result name="input" type="chain">employeeAction_toUpdate</result>
+			<result name="addUI">/WEB-INF/jsp/employee/add.jsp</result>
+		</action>
+		
+			<action name="login">
+			<result>/WEB-INF/jsp/employee/login.jsp</result>
+		</action>
+		<action name="updateEmployee">
+			<result>/WEB-INF/jsp/employee/update.jsp</result>
+		</action>
+	</package>
+</struts>
