@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.CourseDao">
+	<resultMap type="Course" id="courseMap">
+		<id property="id" column="course_id"/>
+		<result property="name" column="course_name"/>
+		<result property="picture" column="course_picture"/>
+		<result property="onlineTime" column="course_onlinetime"/>
+		<result property="status" column="course_status"/>
+		<result property="order" column="course_order"/>
+		<result property="desc" column="course_desc"/>
+	</resultMap>
+	<select id="queryCourseList" resultMap="courseMap">
+		SELECT 
+		course_id,course_name,course_picture,course_status,course_onlinetime,course_order,course_desc FROM t_course 
+		<if test="keyWords!=null and keyWords.keyWord!=null">
+			<bind name="keyWord" value="'%'+keyWords.keyWord+'%'"/>
+		</if>
+		<where>
+			<if test="keyWords!=null and keyWords.status!=null">
+				course_status=#{keyWords.status}
+			</if>
+			<if test="keyWords!=null and keyWords.keyWord!=null">
+				and course_name LIKE #{keyWord} or course_desc LIKE #{keyWord}
+			</if>
+			
+		</where>
+		LIMIT #{offset},#{pageSize}
+	</select>
+	<select id="getTotalCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+		SELECT 
+		COUNT(course_id) 
+		FROM t_course 
+		<if test="keyWords!=null and keyWords.keyWord!=null">
+			<bind name="keyWord" value="'%'+keyWords.keyWord+'%'"/>
+		</if>
+		<where>
+			<if test="keyWords!=null and keyWords.keyWord!=null">
+				course_name LIKE #{keyWord} or course_desc LIKE #{keyWord}
+			</if>
+		</where>
+	</select>
+	<insert id="insertCourse" parameterType="Course" useGeneratedKeys="true" keyProperty="id" keyColumn="course_id">
+		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+			select uuid()
+		</selectKey>
+		INSERT INTO t_course SET course_id = #{id},course_name=#{name},course_order=#{order},course_desc=#{desc}
+	</insert>
+	<update id="updateCourse" parameterType="Course">
+		UPDATE t_course
+		<set>
+			<if test="name!=null">
+				course_name=#{name},
+			</if>
+			<if test="picture!=null">
+				course_picture=#{picture},
+			</if>
+			<if test="order!=null">
+				course_order=#{order},
+			</if>
+			<if test="desc!=null">
+				course_desc=#{desc},
+			</if>
+			<if test="status!=null">
+				course_status=#{status}
+			</if>
+		</set>
+		WHERE course_id=#{id}
+	</update>
+	<select id="queryCourseById" resultMap="courseMap">
+		SELECT course_name,course_desc,course_order,course_picture,course_onlinetime,course_status FROM t_course WHERE course_id=#{id}
+	</select>
+</mapper>

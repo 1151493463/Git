@@ -1,0 +1,273 @@
+<!-- 页签导航 -->
+<div role="tabpanel">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#pushPanel" aria-controls="auditPanel" role="tab" data-toggle="tab" >推送模式</a></li>
+    <li role="presentation"><a href="#managePanel" onclick="managePage()" aria-controls="managePanel" role="tab" data-toggle="tab">管理模式</a></li>
+  </ul>
+</div>
+
+<!-- 页签面板-->
+<div class="tab-content">
+  <!-- 推送模式 -->
+  <div role="tabpanel" class="tab-pane active" id="pushPanel">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="col-sm-10 col-md-11">
+          <div class="btn-group" role="group" aria-label="">
+            <span class="course-list" id="comment-category"></span>
+            <span><button type="button" onclick="pushAllSelect(this)" class="btn btn-default"><span class="glyphicon glyphicon-th-large"></span></button></span>
+          </div>
+        </div>
+        <div class="col-sm-2 col-md-1">
+          <button class="btn btn-warning" id="refresh_btn">
+            <i class="icon-spinner"></i>
+                        推送
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        <div id="push_panels">
+
+        </div>
+      </div>
+      
+    </div>      
+  </div>
+
+  <!-- 管理模式 -->
+  <div role="tabpanel" class="tab-pane" id="managePanel">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="btn-group" role="group" aria-label="">
+        <span class="course-list" id="comment-category"></span>
+        <span><button type="button" onclick="manageAllSelect(this)" class="btn btn-default"><span class="glyphicon glyphicon-th-large"></span></button></span>
+        </div>
+        <p></p>
+        <div class="row">
+          <div class="col-sm-5 col-md-4">
+            <div class="input-group">
+              <input type="text" id="search" class="form-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" onclick="manageComment(1)">搜索</button>
+              </span>
+            </div>  
+          </div>
+          <div class="col-sm-7 col-md-8">
+            <div class="row">
+              <div class="col-sm-3 col-md-3">
+                <div class="checkbox-inline">
+                  <label>
+                    <input onchange="manageComment(1)" type="checkbox" value=未审核> 未审核
+                  </label>
+                </div>  
+                <div class="checkbox-inline">
+                  <label>
+                    <input onchange="manageComment(1)" type="checkbox" value="已审核"> 已审核
+                  </label>
+                </div>           
+              </div>
+              <div class="col-sm-3 col-md-2">
+                <div class="btn-group other" role="group">
+                  <button type="button" class="btn btn-default" onclick="time_order(this)" id="comment_time">评论时间 <span class="glyphicon glyphicon-chevron-down"></span></button>
+                </div>  
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-sm-9 col-md-10">
+        <div id="manage-content">
+          
+        </div>
+      </div>
+      
+      <div class="col-sm-3 col-md-2">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center">
+            <button title="保存" onclick="save()" type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>
+            </button> 
+            <h3 class="panel-title">敏感词</h3>
+          </div>
+          <div class="panel-body">
+            <textarea class="form-control" rows="35" id="sensitiveWord"></textarea>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-sm-9 col-md-10">
+        <!-- 分页导航 -->
+        <nav class="col-md-7 col-md-offset-5">
+     	 <div>
+    		<ul class="pagination" id='example'></ul>
+		</div>
+    	</nav>  
+      </div>
+      <div class="col-sm-3 col-md-2">
+        <button type="button" data-toggle="modal" data-target="#all-agree" class="btn btn-success btn-block">全部通过</button>
+        <button type="button" data-toggle="modal" data-target="#all-reject" class="btn btn-danger btn-block">全部拒绝</button>  
+      </div>  
+      
+    </div>      
+  </div>
+</div>
+
+<!-- push记录审核的Modal界面 -->
+<div class="modal fade bs-example-modal-sm" id="agree" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+                         审核提示
+        </h4>
+      </div>
+      <div class="modal-body">
+                       确认记录审核通过！
+      </div>
+      <div class="modal-footer">
+        <button onclick="verify('通过')" type="button" class="btn btn-primary">
+                          确 认
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                          取 消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="reject" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+                         审核提示
+        </h4>
+      </div>
+      <div class="modal-body">
+                       确认记录审核不通过！
+      </div>
+      <div class="modal-footer">
+        <button onclick="verify('未通过')" type="button" class="btn btn-primary">
+                          确 认
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                          取 消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- manage -->
+<div class="modal fade bs-example-modal-sm" id="manage-agree" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+                         审核提示
+        </h4>
+      </div>
+      <div class="modal-body">
+                       确认记录审核通过！
+      </div>
+      <div class="modal-footer">
+        <button onclick="manageVerify(1)" type="button" class="btn btn-primary">
+                          确 认
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                          取 消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="manage-reject" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+                         审核提示
+        </h4>
+      </div>
+      <div class="modal-body">
+                       确认记录审核不通过！
+      </div>
+      <div class="modal-footer">
+        <button onclick="manageVerify(0)" type="button" class="btn btn-primary">
+                          确 认
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                          取 消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- All -->
+<div class="modal fade bs-example-modal-sm" id="all-agree" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+                         审核提示
+        </h4>
+      </div>
+      <div class="modal-body">
+                       确认当前页记录审核通过！
+      </div>
+      <div class="modal-footer">
+        <button onclick="batchVerify(1)" type="button" class="btn btn-primary">
+                          确 认
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                          取 消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="all-reject" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+                         审核提示
+        </h4>
+      </div>
+      <div class="modal-body">
+                       确认当前页记录审核不通过！
+      </div>
+      <div class="modal-footer">
+        <button onclick="batchVerify(0)" type="button" class="btn btn-primary">
+                          确 认
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                          取 消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

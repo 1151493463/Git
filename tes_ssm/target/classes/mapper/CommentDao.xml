@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.CommentDao">
+	<resultMap type="Comment" id="commentMap">
+		<id property="id" column="comment_id"/>
+		<result property="content" column="comment_content"/>
+		<result property="timeStamp" column="comment_timestamp"/>
+		<result property="isPass" column="comment_ispass" />
+		<association property="user" javaType="User">
+			<result property="nickName" column="user_nickname"/>
+		</association>
+		<association property="video" javaType="Video">
+			<result property="title" column="video_title"/>
+		</association>
+	</resultMap>
+	<select id="getTotalCount"
+		resultType="java.lang.Integer">
+				SELECT count(comment_id) FROM (SELECT com.comment_id,vid.video_title,u.user_nickname 
+		,com.comment_content,cou.course_name,com.comment_timestamp ,com.comment_ispass FROM (SELECT *FROM t_comment
+		<where>
+			<if test="keyWords!=null and keyWords.isVerify=='未审核'.toString()">
+				comment_ispass='未审核'
+			</if>
+			<if test="keyWords!=null and keyWords.isVerify=='已审核'.toString()">
+				comment_ispass!='未审核'
+			</if>
+		</where>
+		) com LEFT JOIN (SELECT *FROM t_course
+		<where>
+			<if test="keyWords!=null and keyWords.courseArray!=null">
+				<foreach collection="keyWords.courseArray" index="index" item="course" separator="OR">
+					course_name=#{course}
+				</foreach>
+			</if>
+			<if test="1==1">
+				AND course_status='上线'
+			</if>
+		</where>
+		) cou
+		on com.course_id=cou.course_id
+		LEFT JOIN (SELECT *FROM t_video WHERE video_ispass='通过' ) vid on
+		com.video_id=vid.video_id LEFT JOIN t_user u on com.user_id=u.user_id
+		<if test="keyWords!=null and keyWords.keyWord!=null">
+			<bind name="keyWord" value="'%'+keyWords.keyWord+'%'" />
+		</if>
+		<where>
+			<if test="keyWords!=null and keyWords.keyWord!=null">
+				user_nickname LIKE #{keyWord} OR video_title LIKE #{keyWord}
+			</if>
+		</where>
+		) t_result WHERE video_title IS NOT NULL AND course_name IS NOT NULL
+	</select>
+	<select id="queryCommentList" resultMap="commentMap">
+		SELECT * FROM (SELECT com.comment_id,vid.video_title,u.user_nickname 
+		,com.comment_content,cou.course_name,com.comment_timestamp ,com.comment_ispass FROM (SELECT *FROM t_comment
+		<where>
+			<if test="keyWords!=null and keyWords.isVerify=='未审核'.toString()">
+				comment_ispass='未审核'
+			</if>
+			<if test="keyWords!=null and keyWords.isVerify=='已审核'.toString()">
+				comment_ispass!='未审核'
+			</if>
+		</where>
+		) com LEFT JOIN (SELECT *FROM t_course
+		<where>
+			<if test="keyWords!=null and keyWords.courseArray!=null">
+				<foreach collection="keyWords.courseArray" index="index" item="course" separator="OR">
+					course_name=#{course}
+				</foreach>
+			</if>
+			<if test="1==1">
+				AND course_status='上线'
+			</if>
+		</where>
+		) cou
+		on com.course_id=cou.course_id
+		LEFT JOIN (SELECT *FROM t_video WHERE video_ispass='通过' ) vid on
+		com.video_id=vid.video_id LEFT JOIN t_user u on com.user_id=u.user_id
+		<if test="keyWords!=null and keyWords.keyWord!=null">
+			<bind name="keyWord" value="'%'+keyWords.keyWord+'%'" />
+		</if>
+		<where>
+			<if test="keyWords!=null and keyWords.keyWord!=null">
+				user_nickname LIKE #{keyWord} OR video_title LIKE #{keyWord}
+			</if>
+		</where>
+		) t_result WHERE video_title IS NOT NULL AND course_name IS NOT NULL
+		<if test="keyWords!=null">
+			<if test="keyWords.order=='DESC'.toString()">
+				ORDER BY comment_timeStamp DESC 
+			</if>
+			<if test="keyWords.order=='ASC'.toString()">
+				ORDER BY comment_timeStamp ASC
+			</if>
+		</if>
+		LIMIT #{offset},#{pageSize}
+	</select>
+	<update id="verifyComment">
+		UPDATE t_comment SET comment_ispass=#{advice}
+		WHERE comment_id IN
+		<foreach collection="idArray" item="id" open="(" close=")" separator=",">
+			#{id}
+		</foreach>
+	</update>
+
+</mapper>

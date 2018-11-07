@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.VideoDao">
+	<resultMap type="entity.Video" id="videoListMap">
+		<id property="id" column="video_id"/>
+		<result property="title" column="video_title"/>
+		<result property="special" column="video_special"/>
+		<result property="forSale" column="video_forsale"/>
+		<result property="clickCount" column="video_click_count"/>
+		<result property="introduction" column="video_introduction"/>
+		<result property="picture" column="video_picture"/>
+		<result property="state" column="video_state"/>
+		<result property="onTime" column="video_onTime"/>
+		<result property="isPass" column="video_ispass"/>
+	</resultMap>
+	
+	<resultMap type="entity.Video" id="videoMap">
+		<id property="id" column="video_id"/>
+		<result property="title" column="video_title"/>
+		<result property="special" column="video_special"/>
+		<result property="forSale" column="video_forsale"/>
+		<result property="clickCount" column="video_click_count"/>
+		<result property="introduction" column="video_introduction"/>
+		<result property="picture" column="video_picture"/>
+		<result property="state" column="video_state"/>
+		<result property="difficulty" column="video_difficulty"/>
+		<result property="onTime" column="video_onTime"/>
+		<result property="isPass" column="video_ispass"/>
+		<result property="urlCc" column="video_url_cc"/>
+		<association property="user" javaType="User">
+			<id property="id" column="user_id"/>
+			<result property="nickName" column="user_nickname"/>	
+		</association>
+		<association property="course" javaType="Course">
+			<id property="id" column="course_id"/>
+			<result property="name" column="course_name"/>
+		</association>
+	</resultMap>
+
+	<select id="getTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT 
+		count(video_id) FROM ((SELECT *FROM t_course
+			<where>
+				<if test="courseName!=null">
+					course_name=#{courseName}
+				</if>
+				<if test="1==1">
+					and course_status='上线'
+				</if>
+			</where>
+		) c LEFT JOIN (SELECT *FROM t_video) v ON c.course_id=v.course_id 
+		LEFT JOIN (SELECT *FROM t_user) u ON v.user_id=u.user_id)
+		<if test="keyWord!=null">
+			<bind name="keyWord" value="'%'+keyWord+'%'"/>
+		</if>
+		<where>
+			<if test="keyWord!=null">
+				course_name IS NOT NULL and video_title LIKE #{keyWord} or video_introduction LIKE #{keyWord} or user_nickname LIKE #{keyWord} or user_loginname LIKE #{keyWord}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryVideoList" resultMap="videoListMap">
+		SELECT 
+		video_id,video_title,video_special,video_forsale,video_click_count,video_introduction,video_picture,video_state,video_onTime,video_ispass 
+		FROM ((SELECT *FROM t_course
+			<where>
+				<if test="keyWords!=null and keyWords.courseName!=null">
+					course_name=#{keyWords.courseName}
+				</if>
+				<if test="1==1">
+					and course_status='上线'
+				</if>
+			</where>
+		) c LEFT JOIN (SELECT *FROM t_video) v ON c.course_id=v.course_id 
+		LEFT JOIN (SELECT *FROM t_user) u ON v.user_id=u.user_id) 
+		<if test="keyWords!=null and keyWords.keyWord!=null">
+			<bind name="keyWord" value="'%'+keyWords.keyWord+'%'"/>
+		</if>
+		<where>
+			<if test="1==1">
+				video_id IS NOT NULL
+			</if>
+			<if test="keyWords!=null and keyWords.keyWord!=null">
+				and video_title LIKE #{keyWord} or video_introduction LIKE #{keyWord} or user_nickname LIKE #{keyWord} or user_loginname LIKE #{keyWord} 
+			</if>
+		</where>
+		LIMIT #{offset},#{pageSize}
+	</select>
+	<select id="queryVideoByCondition" parameterType="Video" resultMap="videoMap">
+		SELECT
+		video_id,video_title,video_special,video_forsale,video_click_count,video_introduction,
+		video_picture,video_state,video_difficulty,video_url_cc,video_onTime,video_ispass,v.user_id,user_nickname,v.course_id,course_name
+		FROM
+		((SELECT *FROM t_video
+		<where>
+			<if test="id!=null">
+				video_id=#{id}
+			</if>
+		</where>
+		) v LEFT JOIN (SELECT course_id,course_name FROM t_course) c
+		ON v.course_id=c.course_id LEFT JOIN (SELECT user_id,user_nickname FROM
+		t_user) u ON v.user_id=u.user_id)
+	</select>
+	<update id="updateVideo" parameterType="Video">
+		UPDATE t_video
+		<set>
+			<if test="clickCount!=null">
+				video_click_count=video_click_count+1,
+			</if>
+			<if test="isPass!=null">
+				video_ispass=#{isPass}
+			</if>
+		</set>
+		WHERE video_id= #{id}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

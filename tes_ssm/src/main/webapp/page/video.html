@@ -1,0 +1,281 @@
+﻿<script>
+    $(function () {
+      $('[data-toggle="popover"]').popover()
+      })
+</script>
+<script type="text/javascript">
+    $(function() {
+      $("#chk_all").click(function() {
+      if ($(":checkbox").prop("checked")){
+            $(":checkbox").prop("checked",true);
+          }
+      else{
+            $(":checkbox").removeAttr("checked");
+           }
+      });
+    });
+</script>
+<div role="tabpanel"  >
+<!-- 页签导航 -->
+<ul class="nav nav-tabs " role="tablist" >
+<li role="presentation" class="active"><a href="#videoPanel" aria-controls="videoPanel" role="tab" data-toggle="tab" >视频</a></li>
+<li role="presentation"><a href="#videoDesc" aria-controls="videoDesc" role="tab" data-toggle="tab">详情</a></li>
+</ul>
+<!-- 页签面板-->
+<div class="tab-content">
+<!-- 删除记录的Modal界面 -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+     <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">删除视频</h4>
+      </div>
+      <div class="modal-body">
+        确认删除该记录？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">确  认</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">取  消</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <div role="tabpanel" class="tab-pane active" id="videoPanel">
+    <div class="panel panel-default">
+      <div class="panel-body">
+
+        <div class="btn-group" id="videoTitle" role="group" aria-label="...">
+         
+        </div>
+        <p></p>
+
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">搜 索</button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <p></p>
+
+        <div class="row" id="video-list">
+
+        </div>
+		
+      </div>
+    </div><!-- 视频记录面板 end -->
+
+<!-- 分页导航 -->
+  <nav class="col-md-8 col-md-offset-4">
+   <div>
+    		<ul class="pagination" id='example'></ul>
+		</div>
+  </nav>
+</div><!--videoPanel end-->
+
+<div class="modal fade bs-example-modal-sm" id="isPass" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+                    视频审核
+        </h4>
+      </div>
+      <div class="modal-body">
+                确认该视频通过审核？
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="changeStatus()" class="btn btn-primary">
+                    确 认
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                     取 消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade bs-example-modal-sm" id="reject" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">
+                    视频审核
+        </h4>
+      </div>
+      <div class="modal-body">
+                设置该视频未不通过？
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="changeStatus()" class="btn btn-primary">
+                    确 认
+        </button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                     取 消
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div role="tabpanel" class="tab-pane" id="videoDesc">
+
+<!-- 修改视频的Modal界面 -->
+<div class="modal fade" id="editVideo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+       <form class="form-horizontal" action="" method="post">
+
+	  <div class="form-group">
+          <label class="col-md-3 control-label" for="videoName">视频名称:</label>
+		<div class="col-md-8">
+	        <input type="text" id="videoName" class="form-control">
+		</div>
+	  </div>
+
+				   <div class="form-group">
+           <label class="col-md-3 control-label" for="videoImage">视频图片:</label>
+					 <div class="col-md-8">
+					 <input type="text" id="videoImage" class="form-control">
+					 </div>
+				   </div>
+
+				<div class="form-group">
+          <label class="col-md-3 control-label" for="videoPath">视频路径:</label>
+					<div class="col-md-8">
+						<input type="text" id="videoPath" class="form-control">
+					</div>
+				</div>
+
+				<div class="form-group">
+        <label for="courseNo" class="col-md-3 control-label">课程名称:</label>
+				<div class="col-md-8">
+						<select id="courseNo" class="form-control">
+							<option>==请选择==</option>
+							<option>44400011-4455-6677-8899-AABBCCDDEEFF</option>
+							<option>44400022-4455-6677-8899-AABBCCDDEEFF</option>
+              <option>44400033-4455-6677-8899-AABBCCDDEEFF</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+        <label for="teacherNo" class="col-md-3 control-label">讲师姓名:</label>
+				<div class="col-md-8">
+						<select id="teacherNo" class="form-control">
+              <option>==请选择==</option>
+							<option>44400011-4455-6677-8899-AABBCCDDEEFF</option>
+							<option>44400022-4455-6677-8899-AABBCCDDEEFF</option>
+              <option>44400033-4455-6677-8899-AABBCCDDEEFF</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+        <label for="level" class="col-md-3 control-label">推荐等级:</label>
+					<div class="col-md-8">
+            <input type="number" id="level" class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+          <label for="diffLevel" class="col-md-3 control-label">难度等级:</label>
+					<div class="col-md-8">
+          <input type="number" id="diffLevel"class="form-control">
+					</div>
+				</div>
+				<div class="form-group">
+        <label for="clickNo" class="col-md-3 control-label">点击次数:</label>
+			  <div class="col-md-8">
+        <input type="number" id="clickNo" class="form-control">
+				</div>
+				</div>
+
+				<div class="form-group">
+        <label for="isBuy" class="col-md-3 control-label">视频购买:</label>
+				<div class="col-md-8">
+						<select id="isBuy" class="form-control">
+							<option>==请选择==</option>
+							<option>是</option>
+							<option>否</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+        <label for="isPass" class="col-md-3 control-label">审核状态:</label>
+					<div class="col-md-8">
+						<select id="isPass" class="form-control">
+							<option>==请选择==</option>
+							<option>是</option>
+							<option>否</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group">
+        <label for="time" class="col-md-3 control-label">上架时间:</label>
+				<div class="col-md-8">
+        <input type="date" id="time" class="form-control">
+			  </div>
+				</div>
+
+				<div class="form-group">
+        <label for="videoDesc" class="col-md-3 control-label">视频介绍:</label>
+				<div class="col-md-8">
+        <textarea id="videoDesc" class="form-control" rows="4"></textarea>
+				</div>
+				</div>
+
+        <div class="form-group">
+        <div class="col-md-4 col-md-offset-8">
+        <button type="submit" class="btn btn-primary">确  认</button>
+        <button type="reset" class="btn btn-primary" data-dismiss="modal">取  消</button>
+        </div>
+        </div>
+       </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end -->
+  <div class="panel panel-default" id="video-detail">
+    <div class="panel-body">
+	<div style="text-align: center;" id="tip">轻先选择要查询的视频</div>
+      <div class="rows" style="display: none" id="video-panel">
+        <div class="embed-responsive embed-responsive-16by9 col-md-9">
+        <video style="height: 75%;width: 100%;object-fit: fill" controls="controls"></video>
+        </div>
+        <div id="videoDeatil" class="caption col-md-3">
+        <input type="hidden" id="videoId">
+           <h3>JAVA 变量</h3>
+           <p>视频路径 : <span>/video/shipin.mp4</span></p>
+           <p>课程名称 : <span>Java</span></p>
+           <p>讲师名称 : <span>陈老师</span></p>
+           <p>推荐等级 : <span>5</span></p>
+           <p>难度等级 : <span>2</span></p>
+           <p>点击次数 : <span>18</span></p>
+           <p>上架日期 : <span>2015年07月18日</span></p>
+           <p>是否购买 : <span>否</span></p>
+           <p>审核状态 : <span>否</span></p>
+           <p>视频介绍 : <span>……………………………………</span></p>
+           <div class="rows">
+            <span id="option"></span>
+            <button data-toggle="modal" data-target="#editVideo" type="button" class="btn btn-primary">编辑</button>
+            <button type="button" class="btn btn-danger">删除</button>
+           </div>
+        </div>
+      </div>
+    </div><!-- panel end-->
+  </div><!--videoDesc end-->
+</div><!--tab-content-->

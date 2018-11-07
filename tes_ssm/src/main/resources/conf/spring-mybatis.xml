@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:util="http://www.springframework.org/schema/util" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+	 <!-- 加载属性文件 --> 
+    <context:property-placeholder location="classpath:conf/*.properties" />
+    
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+       		<property name="driverClassName" value="${jdbc.driverClass}"></property>
+       		<property name="url" value="${jdbc.master.url}"></property>
+       		<property name="username" value="${jdbc.userName}"></property>
+       		<property name="password" value="${jdbc.userPassword}"></property>
+    </bean>
+<!-- 	<bean id="abstractDataSource" abstract="true" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+       		<property name="driverClassName" value="${jdbc_driverClass}"></property>
+       		<property name="url" value="${jdbc_url}"></property>
+       		<property name="username" value="${jdbc_userName}"></property>
+       		<property name="password" value="${jdbc_userPassword}"></property>
+    </bean>
+    <bean id="master" parent="abstractDataSource">
+    		<property name="driverClassName" value="${jdbc.driverClass}"></property>
+       		<property name="url" value="${jdbc.master.url}"></property>
+       		<property name="username" value="${jdbc.userName}"></property>
+       		<property name="password" value="${jdbc.userPassword}"></property>
+    </bean>
+    <bean id="slave" parent="abstractDataSource">
+		<property name="driverClassName" value="${jdbc.driverClass}"></property>
+   		<property name="url" value="${jdbc.slave.url}"></property>
+   		<property name="username" value="${jdbc.userName}"></property>
+   		<property name="password" value="${jdbc.userPassword}"></property>
+    </bean>
+	<bean id="dynamicDataSource" class="dao.split.DynamicDataSource">
+			<property name="targetDataSources">
+				<map>
+					<entry value-ref="master" key="master"></entry>
+					<entry value-ref="slave" key="slave"></entry>
+				</map>
+			</property>
+	</bean>
+    
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+    	<property name="targetDataSource" ref="dynamicDataSource"></property>
+    </bean> -->
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<!-- 配置MyBaties全局配置文件:mybatis-config.xml -->
+		<property name="configLocation" value="classpath:conf/configuration.xml"></property>
+		<property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+	</bean>
+
+	<!-- 扫描dao包，给mapper接口做动态代理对象 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="dao"></property>
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+	</bean>
+
+	<!-- Spring jdbc 的事务管理器 -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 扫描事务有关的注解@Transactional -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+</beans>

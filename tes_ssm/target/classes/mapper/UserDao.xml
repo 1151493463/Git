@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.UserDao">
+
+	<resultMap type="User" id="userMap">
+		<id property="id" column="user_id"/>
+		<result property="loginName" column="user_loginname"/>
+		<result property="loginType" column="user_loginType"/>
+		<result property="nickName" column="user_nickname"/>
+		<result property="password" column="user_password"/>
+		<result property="age" column="user_age"/>
+		<result property="type" column="user_type"/>
+		<result property="head" column="user_head"/>
+		<result property="score" column="user_score"/>
+		<result property="isLock" column="user_islock"/>
+		<result property="pwdState" column="user_pwdstate"/>
+		<result property="regDate" column="user_regdate"/>
+		<result property="sex" column="user_sex"/>
+		<result property="activeCode" column="user_activecode"/>
+		<result property="introduction" column="user_introduction"/>
+		<collection property="roles" ofType="entity.Role">
+			<id property="id" column="role_id"/>
+			<result property="name" column="role_name"/>
+		</collection>
+	</resultMap>
+	<select id="queryUserByCondition" parameterType="User" resultMap="userMap">
+	SELECT
+	user_id,user_loginname,user_logintype,user_nickname,user_password,user_age,user_type,user_head,user_score,user_islock,user_pwdstate,user_regdate,
+	user_sex,user_introduction,role_id,role_name FROM (SELECT *FROM t_user
+	<where>
+		<if test="id!=null">
+			user_id = #{id}
+		</if>
+		<if test="loginName!=null">
+			and user_loginname = #{loginName}
+		</if>
+		<if test="password!=null">
+			and user_password = #{password}
+		</if>
+	</where>
+	)
+	t_user LEFT JOIN t_user_role ON t_user.user_id = t_user_role.uid LEFT
+	JOIN t_role ON t_user_role.rid = t_role.role_id
+	</select>
+
+	<select id="queryUserList" resultMap="userMap">
+	SELECT user_id,user_loginname,user_logintype,user_nickname,user_password,user_age,user_type, user_head,user_score,
+  user_islock,user_pwdstate,user_regdate, user_sex,user_introduction,role_id,role_name FROM (SELECT *FROM (
+  SELECT *FROM t_user WHERE user_id IN (SELECT user_id FROM (SELECT user_id FROM (SELECT user_id FROM t_user
+  <if test="keyWords!=null and keyWords.userName!=null">
+		<bind name="userName" value="'%'+keyWords.userName+'%'" />
+	</if>
+	<where>
+		<if test="keyWords!=null and keyWords.userName!=null">
+			user_loginname like #{userName}
+		</if>
+		<if test="keyWords!=null and keyWords.userName!=null">
+			or user_nickname like #{userName}
+		</if>
+	</where>
+  ) t_user INNER JOIN t_user_role
+    ON t_user.user_id = t_user_role.uid INNER JOIN (SELECT role_id FROM t_role
+    <where>
+		<if test="keyWords!=null and keyWords.roleCategory!=null">
+			role_name = #{keyWords.roleCategory}
+		</if>
+	</where>
+    ) t_role ON t_user_role.rid=t_role.role_id GROUP BY user_id LIMIT #{offset},#{pageSize}) t_result1
+)
+  ) t_user INNER JOIN t_user_role ON t_user.user_id = t_user_role.uid INNER JOIN
+  (SELECT *FROM t_role) t_role ON t_user_role.rid = t_role.role_id) t_result2
+</select>
+	
+	
+	<select id="getTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(sum) FROM (SELECT COUNT(user_id) as sum FROM ((SELECT user_id FROM t_user
+		<if test="userName!=null">
+		<bind name="userName" value="'%'+userName+'%'" />
+		</if>
+		<where>
+			<if test="userName!=null">
+				user_loginname like #{userName}
+			</if>
+			<if test="userName!=null">
+				or user_nickname like #{userName}
+			</if>
+		</where>
+		) t_user INNER JOIN t_user_role ON t_user.user_id = t_user_role.uid INNER JOIN (SELECT role_id FROM t_role
+		<where>
+			<if test="roleCategory!=null">
+				role_name = #{roleCategory}
+			</if>
+	</where>
+		) t_role ON t_user_role.rid=t_role.role_id) GROUP BY user_id) t_count
+	</select>
+	<insert id="insertUser" useGeneratedKeys="true" parameterType="User" keyProperty="id" keyColumn="user_id">
+		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+			select uuid()
+		</selectKey>
+		INSERT INTO t_user
+		(user_id,user_loginname,user_logintype,user_nickname,user_password,user_age,user_sex) 
+		VALUES
+		(#{id},#{loginName},#{loginType},#{nickName},#{password},#{age},#{sex})
+	</insert>
+	<update id="updateUser" parameterType="User">
+	UPDATE t_user
+	<set>
+		<if test="loginName!=null">
+			user_loginname=#{loginName},user_logintype=#{loginType},
+		</if>
+		<if test="nickName!=null">
+			user_nickname=#{nickName},
+		</if>
+		<if test="password!=null">
+			user_password=#{password},
+		</if>
+		<if test="type!=null">
+			user_type=#{type},
+		</if>
+		<if test="head!=null">
+			user_head=#{head},
+		</if>
+		<if test="score!=null">
+			user_score=#{score},
+		</if>
+		<if test="isLock!=null">
+			user_islock=#{isLock},
+		</if>
+		<if test="pwdState!=null">
+			user_pwdstate=#{pwdState},
+		</if>
+		<if test="regDate!=null">
+			user_regdate=#{regDate},
+		</if>
+		<if test="age!=null">
+			user_age=#{age},
+		</if>
+		<if test="sex!=null">
+			user_sex=#{sex},
+		</if>
+		<if test="introduction!=null">
+			user_introduction=#{introduction}
+		</if>
+		<if test="activeCode!=null">
+			user_activecode=#{activeCode}
+		</if>
+	</set>
+	WHERE user_id=#{id}
+	</update>
+	<insert id="addUserRole">
+		INSERT INTO t_user_role(uid, rid) VALUES 
+		<foreach collection="roles" index="index" item="roleId" separator=",">
+			(
+			#{userId},#{roleId}
+			)
+		</foreach>
+	</insert>
+	<delete id="deleteUserRole">
+		DELETE FROM t_user_role WHERE uid = #{id}
+	</delete>
+	<insert id="batchInsertUser" parameterType="java.util.List">
+		INSERT INTO 
+		t_user(
+		user_id,
+		user_loginname,
+		user_logintype,
+		user_nickname,
+		user_password,
+		user_age,
+		user_type,
+		user_sex,
+		user_score,
+		user_islock,
+		user_introduction)
+		VALUES
+		<foreach collection="list" item="user" separator=",">
+			(
+			#{user.id},
+			#{user.loginName},
+			#{user.loginType},
+			#{user.nickName},
+			#{user.password},
+			#{user.age},
+			#{user.type},
+			#{user.sex},
+			#{user.score},
+			#{user.isLock},
+			#{user.introduction}
+			)
+		</foreach>
+	</insert>
+	<select id="queryUserModulesByLoginName" parameterType="java.lang.String" resultType="java.lang.String">
+	select module_name from t_module where module_id in (
+	select mid from t_user_module where uid = (select user_id from t_user where user_loginname=#{loginName})
+	)
+	</select>
+</mapper>

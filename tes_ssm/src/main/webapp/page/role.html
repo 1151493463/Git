@@ -1,0 +1,122 @@
+<!-- 页签导航 -->
+<div role="tabpanel">
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#rolePanel" aria-controls="rolePanel" role="tab" data-toggle="tab" >列表</a></li>
+    <li role="presentation"><a href="#addPanel" aria-controls="addPanel" role="tab" data-toggle="tab">新增</a></li>
+  </ul>
+</div>
+
+<!-- 页签面板-->
+<div class="tab-content">
+
+  <div role="tabpanel" class="tab-pane active" id="rolePanel">
+    <div class="panel panel-default">
+      <div class="panel-body">
+
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" id="search">搜 索</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th class="col-md-1">#</th>
+              <th class="col-md-3">编码</th>
+              <th class="col-md-1">名称</th>
+              <th class="col-md-1">操作</th>
+            </tr>
+          </thead>
+          <tbody id="content">
+				
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+    <!-- 分页导航 -->
+    <nav class="col-md-7 col-md-offset-5">
+     	 <div>
+    		<ul class="pagination" id='example'></ul>
+		</div>
+    </nav>
+  </div>
+
+  <!-- 新增角色 -->
+  <div role="tabpanel" class="tab-pane" id="addPanel">
+    <div class="panel panel-default">
+      <div class="panel-body">
+          <!-- inputs -->
+          <div class="form-group">
+            <label class="col-md-3 control-label" for="roleName">角色名称:</label>
+            <div class="col-md-8">
+              <input type="text" id="roleName"  class="form-control">
+            </div>
+          </div>
+          <br>
+          <!-- buttons -->
+          <div class="form-group">
+            <div class="col-md-8 col-md-offset-3">
+              <button type="button" class="btn btn-primary">确  认</button>
+            <button type="reset" class="btn btn-primary">重  置</button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- /tab-content-->
+
+<!-- 删除角色的Modal界面 -->
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+  <div class="modal-dialog modal-sm">
+     <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">删除角色</h4>
+      </div>
+      <div class="modal-body">
+                  确认删除该记录？
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">确  认</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal">取  消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 角色活动的界面 -->
+<div class="modal fade" id="editRole" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header" align="center">
+        <h4 class="modal-title" id="myModalLabel"><strong>编 辑 角 色</strong></h4>
+      </div>
+      <div class="modal-body">
+      <form class="form-horizontal">
+        <div class="form-group">
+          <label class="col-md-3 control-label" for="role_name">角色名称:</label>
+          <div class="col-md-8">
+           <input type="text" id="role_name"  class="form-control">
+          </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-8 col-md-offset-3">
+              <button type="submit" class="btn btn-primary">确  认</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">取  消</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

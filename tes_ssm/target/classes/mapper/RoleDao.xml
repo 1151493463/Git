@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.RoleDao">
+	<resultMap type="Role" id="roleMap">
+		<id property="id" column="role_id"/>
+		<result property="name" column="role_name"/>
+	</resultMap>
+	<select id="getTotalCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(role_id) FROM t_role
+		<where>
+			<if test="roleName!=null">
+			<bind name="roleName" value="'%'+roleName+'%'"/>
+				role_name LIKE #{roleName}
+			</if>
+		</where>
+	</select>
+	
+
+	<select id="queryRoleList" resultMap="roleMap">
+		SELECT role_id,role_name FROM t_role 
+		<where>
+			<if test="keyWords!=null and keyWords.roleName!=null">
+			<bind name="roleName" value="'%'+keyWords.roleName+'%'"/>
+				role_name LIKE #{roleName}
+			</if>
+		</where>
+		LIMIT #{offset},#{pageSize}
+	</select>
+	<insert id="addRole" parameterType="Role">
+		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+			select uuid()
+		</selectKey>
+		INSERT INTO t_role(role_id,role_name) VALUES(#{id},#{name})
+	</insert>
+	<delete id="deleteRole">
+		DELETE FROM t_role WHERE role_id = #{roleId}
+	</delete>
+</mapper>
