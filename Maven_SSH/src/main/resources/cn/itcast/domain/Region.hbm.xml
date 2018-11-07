@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-4-19 13:48:25 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="cn.itcast.domain.Region" table="region" catalog="ssh">
+        <id name="regionId" type="double">
+            <column name="REGION_ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="regionCode" type="string">
+            <column name="REGION_CODE" length="100" not-null="true" />
+        </property>
+        <property name="regionName" type="string">
+            <column name="REGION_NAME" length="100" not-null="true" />
+        </property>
+        <property name="parentId" type="double">
+            <column name="PARENT_ID" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="regionLevel" type="double">
+            <column name="REGION_LEVEL" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="regionOrder" type="double">
+            <column name="REGION_ORDER" precision="22" scale="0" not-null="true" />
+        </property>
+        <property name="regionNameEn" type="string">
+            <column name="REGION_NAME_EN" length="100" not-null="true" />
+        </property>
+        <property name="regionShortnameEn" type="string">
+            <column name="REGION_SHORTNAME_EN" length="10" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>
