@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--private Integer id;
+    private List<Goods> list;
+    private int totalCount;
+    private double totalPrice;
+    private String date;
+    private String name;
+    private double payMoney;-->
+
+<Cart>
+    <cart>
+        <id>1</id>
+        <name>可乐</name>
+        <totalCount>2</totalCount>
+        <totalPrice>6</totalPrice>
+        <date>2017-01-21 12:32:34</date>
+        <payMoney>16</payMoney>
+    </cart>
+    <cart>
+        <id>2</id>
+        <name>面包</name>
+        <totalCount>2</totalCount>
+        <totalPrice>10</totalPrice>
+        <date>2017-01-21 12:33:34</date>
+        <payMoney>16</payMoney>
+    </cart>
+    <cart>
+        <id>3</id>
+        <name>鼠标</name>
+        <totalCount>1</totalCount>
+        <totalPrice>50</totalPrice>
+        <date>2017-01-21 12:52:34</date>
+        <payMoney>50</payMoney>
+    </cart>
+    <cart>
+        <id>4</id>
+        <name>啤酒</name>
+        <totalCount>5</totalCount>
+        <totalPrice>15</totalPrice>
+        <date>2017-01-21 13:32:34</date>
+        <payMoney>15</payMoney>
+    </cart>
+</Cart>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--private Integer id;
+    private String name;
+    private double price;
+    private int num;
+    private String remark;
+    private int saleNum;-->
+<Goods> 
+  <good> 
+    <id>1</id>  
+    <name>苹果</name>  
+    <price>1.00</price>  
+    <num>50</num>  
+    <remark>货源充足</remark>  
+    <saleNum>30</saleNum> 
+  </good>  
+  <good> 
+    <id>2</id>  
+    <name>可乐</name>  
+    <price>3.00</price>  
+    <num>100</num>  
+    <remark>货源充足</remark>  
+    <saleNum>100</saleNum> 
+  </good>  
+  <good> 
+    <id>3</id>  
+    <name>鼠标</name>  
+    <price>50</price>  
+    <num>2</num>  
+    <remark>库存不足</remark>  
+    <saleNum>20</saleNum> 
+  </good>  
+  <good> 
+    <id>4</id>  
+    <name>泡面</name>  
+    <price>2.5</price>  
+    <num>100</num>  
+    <remark>货源充足</remark>  
+    <saleNum>200</saleNum> 
+  </good>  
+  <good> 
+    <id>6</id>  
+    <name>iphone</name>  
+    <price>4000.0</price>  
+    <num>20</num>  
+    <remark>null</remark>  
+    <saleNum>0</saleNum> 
+  </good> 
+</Goods>
